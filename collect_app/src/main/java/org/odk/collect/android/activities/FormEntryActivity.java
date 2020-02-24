@@ -90,8 +90,8 @@ import org.odk.collect.android.events.ReadPhoneStatePermissionRxEvent;
 import org.odk.collect.android.events.RxEventBus;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.external.ExternalDataManager;
+import org.odk.collect.android.formentry.FormEntryMenuDelegate;
 import org.odk.collect.android.formentry.FormLoadingDialogFragment;
-import org.odk.collect.android.formentry.saving.FormSaveViewModel;
 import org.odk.collect.android.formentry.ODKView;
 import org.odk.collect.android.formentry.QuitFormDialog;
 import org.odk.collect.android.formentry.SaveFormProgressDialogFragment;
@@ -104,6 +104,7 @@ import org.odk.collect.android.formentry.backgroundlocation.BackgroundLocationHe
 import org.odk.collect.android.formentry.backgroundlocation.BackgroundLocationManager;
 import org.odk.collect.android.formentry.backgroundlocation.BackgroundLocationViewModel;
 import org.odk.collect.android.formentry.repeats.AddRepeatDialog;
+import org.odk.collect.android.formentry.saving.FormSaveViewModel;
 import org.odk.collect.android.fragments.MediaLoadingFragment;
 import org.odk.collect.android.fragments.dialogs.CustomDatePickerDialog;
 import org.odk.collect.android.fragments.dialogs.LocationProvidersDisabledDialog;
@@ -287,6 +288,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
     MediaLoadingFragment mediaLoadingFragment;
     private boolean addingInline;
+    private FormEntryMenuDelegate optionsMenuDelegate;
 
     @Override
     public void allowSwiping(boolean doSwipe) {
@@ -346,6 +348,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         questionHolder = findViewById(R.id.questionholder);
 
         initToolbar();
+        optionsMenuDelegate = new FormEntryMenuDelegate(this, this::getFormController);
 
         nextButton = findViewById(R.id.form_forward_button);
         nextButton.setOnClickListener(v -> {
@@ -963,47 +966,14 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.form_menu, menu);
+        optionsMenuDelegate.onCreate(getMenuInflater(), menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-
-        boolean useability;
-
-        useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_SAVE_MID);
-
-        menu.findItem(R.id.menu_save).setVisible(useability).setEnabled(useability);
-
-        useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_JUMP_TO);
-
-        menu.findItem(R.id.menu_goto).setVisible(useability)
-                .setEnabled(useability);
-
-        FormController formController = getFormController();
-
-        useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_CHANGE_LANGUAGE)
-                && (formController != null)
-                && formController.getLanguages() != null
-                && formController.getLanguages().length > 1;
-
-        menu.findItem(R.id.menu_languages).setVisible(useability)
-                .setEnabled(useability);
-
-        useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_ACCESS_SETTINGS);
-
-        menu.findItem(R.id.menu_preferences).setVisible(useability)
-                .setEnabled(useability);
-
-        if (getFormController() != null && getFormController().currentFormCollectsBackgroundLocation()
-                && PlayServicesUtil.isGooglePlayServicesAvailable(this)) {
-            MenuItem backgroundLocation = menu.findItem(R.id.track_location);
-            backgroundLocation.setVisible(true);
-            backgroundLocation.setChecked(GeneralSharedPreferences.getInstance().getBoolean(KEY_BACKGROUND_LOCATION, true));
-        }
-
+        optionsMenuDelegate.onPrepare(menu);
         return true;
     }
 
