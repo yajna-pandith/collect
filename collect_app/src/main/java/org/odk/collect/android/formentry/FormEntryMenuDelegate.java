@@ -1,6 +1,7 @@
 package org.odk.collect.android.formentry;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,6 +11,7 @@ import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_BACKGROUND_LOCATION;
@@ -63,6 +65,17 @@ public class FormEntryMenuDelegate {
         }
 
         menu.findItem(R.id.menu_add_repeat).setVisible(isInRepeat());
+    }
+
+    public boolean onItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_preferences:
+                Intent pref = new Intent(context, PreferencesActivity.class);
+                context.startActivity(pref);
+                return true;
+        }
+
+        return false;
     }
 
     private boolean isInRepeat() {
