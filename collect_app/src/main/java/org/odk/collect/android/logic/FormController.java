@@ -66,6 +66,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.odk.collect.android.formentry.javarosa.FormIndexUtils.getPreviousLevel;
 import static org.odk.collect.android.utilities.ApplicationConstants.Namespaces.XML_OPENDATAKIT_NAMESPACE;
 
 /**
@@ -873,6 +874,16 @@ public class FormController {
      */
     public int jumpToIndex(FormIndex index) {
         return formEntryController.jumpToIndex(index);
+    }
+
+    /**
+     * Jumps to the next prompt for a repeated instance of the group referenced by the current FormIndex.
+     */
+    public void jumpToNewRepeatPrompt() {
+        FormIndex parentRepeatGroup = getPreviousLevel(getFormIndex());
+
+        jumpToIndex(parentRepeatGroup);
+        stepToNextEventType(FormEntryController.EVENT_PROMPT_NEW_REPEAT);
     }
 
     /**
