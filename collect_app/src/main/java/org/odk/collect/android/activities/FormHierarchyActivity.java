@@ -51,6 +51,8 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.odk.collect.android.formentry.javarosa.FormIndexUtils.getPreviousLevel;
+
 /**
  * Displays the structure of a form along with the answers for the current instance. Different form
  * elements are displayed in the following ways:
@@ -383,8 +385,8 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
         // we don't want to display in the path (e.g. a question name or the
         // very first group in a form which is auto-entered).
         if (formController.getEvent(index) == FormEntryController.EVENT_QUESTION
-                || formController.stepIndexOut(index) == null) {
-            index = formController.stepIndexOut(index);
+                || getPreviousLevel(index) == null) {
+            index = getPreviousLevel(index);
         }
 
         List<FormEntryCaption> groups = new ArrayList<>();
@@ -395,7 +397,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
 
         while (index != null) {
             groups.add(0, formController.getCaptionPrompt(index));
-            index = formController.stepIndexOut(index);
+            index = getPreviousLevel(index);
         }
 
         // If the repeat picker is showing, don't show an item number for the current index.
@@ -458,10 +460,10 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
             contextGroupRef = formController.getFormIndex().getReference();
             formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
         } else {
-            FormIndex potentialStartIndex = formController.stepIndexOut(startIndex);
+            FormIndex potentialStartIndex = getPreviousLevel(startIndex);
             // Step back until we hit a displayable group or the beginning.
             while (!isScreenEvent(formController, potentialStartIndex)) {
-                potentialStartIndex = formController.stepIndexOut(potentialStartIndex);
+                potentialStartIndex = getPreviousLevel(potentialStartIndex);
             }
 
             screenIndex = potentialStartIndex;
