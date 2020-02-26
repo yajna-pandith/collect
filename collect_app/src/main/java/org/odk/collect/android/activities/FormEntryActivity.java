@@ -106,6 +106,8 @@ import org.odk.collect.android.formentry.audit.IdentityPromptViewModel;
 import org.odk.collect.android.formentry.backgroundlocation.BackgroundLocationHelper;
 import org.odk.collect.android.formentry.backgroundlocation.BackgroundLocationManager;
 import org.odk.collect.android.formentry.backgroundlocation.BackgroundLocationViewModel;
+import org.odk.collect.android.formentry.javarosawrapper.FormController;
+import org.odk.collect.android.formentry.javarosawrapper.FormController.FailedConstraint;
 import org.odk.collect.android.formentry.repeats.AddRepeatDialog;
 import org.odk.collect.android.formentry.saving.FormSaveViewModel;
 import org.odk.collect.android.fragments.MediaLoadingFragment;
@@ -120,8 +122,6 @@ import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.listeners.SavePointListener;
 import org.odk.collect.android.listeners.WidgetValueChangedListener;
 import org.odk.collect.android.location.client.GoogleLocationClient;
-import org.odk.collect.android.formentry.javarosawrapper.FormController;
-import org.odk.collect.android.formentry.javarosawrapper.FormController.FailedConstraint;
 import org.odk.collect.android.logic.FormInfo;
 import org.odk.collect.android.logic.ImmutableDisplayableQuestion;
 import org.odk.collect.android.preferences.AdminKeys;
@@ -331,11 +331,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupViewModels();
-
         setContentView(R.layout.form_entry);
-
         Collect.getInstance().getComponent().inject(this);
+        setupViewModels();
 
         compositeDisposable
                 .add(eventBus
@@ -740,6 +738,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         // If we're coming back from the hierarchy view, the user has either tapped the back
         // button or another question to jump to so we need to rebuild the view.
         if (requestCode == RequestCodes.HIERARCHY_ACTIVITY) {
+            formEntryViewModel.addRepeat();
             refreshCurrentView();
             return;
         }
