@@ -81,6 +81,7 @@ import org.javarosa.form.api.FormEntryPrompt;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;
 import org.odk.collect.android.R;
+import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.audio.AudioControllerView;
 import org.odk.collect.android.dao.FormsDao;
@@ -307,6 +308,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     @Inject
     RxEventBus eventBus;
 
+    @Inject
+    Analytics analytics;
+
     private final LocationProvidersReceiver locationProvidersReceiver = new LocationProvidersReceiver();
 
     /**
@@ -422,7 +426,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         });
 
         formEntryViewModel = ViewModelProviders
-                .of(this, new FormEntryViewModel.Factory(this::getFormController))
+                .of(this, new FormEntryViewModel.Factory(this::getFormController, analytics))
                 .get(FormEntryViewModel.class);
 
         formEntryViewModel.getUpdates().observe(this, new Observer<FormEntryViewModel.ViewUpdate>() {
@@ -1688,7 +1692,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 FormController formController = getFormController();
 
                 try {
-                    formController.newRepeat();
+                    formEntryViewModel.addRepeat();
                 } catch (Exception e) {
                     FormEntryActivity.this.createErrorDialog(
                             e.getMessage(), DO_NOT_EXIT);
