@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.odk.collect.android.listeners.FormLoaderListener;
-import org.odk.collect.android.logic.FormController;
+import org.odk.collect.android.formentry.javarosawrapper.FormController;
 import org.odk.collect.android.tasks.FormLoaderTask;
 import org.odk.collect.android.test.FormLoadingUtils;
 
