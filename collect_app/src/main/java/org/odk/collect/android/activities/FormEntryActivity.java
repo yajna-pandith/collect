@@ -1464,8 +1464,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     }
 
     private boolean saveBeforeNextView(FormController formController) {
-        formController.getAuditEventLogger().flush();    // Close events waiting for an end time
-
         if (formController.currentPromptIsQuestion()) {
             // get constraint behavior preference value with appropriate default
             String constraintBehavior = (String) GeneralSharedPreferences.getInstance()
@@ -1485,6 +1483,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
             }
         }
+
+        formController.getAuditEventLogger().flush();    // Close events waiting for an end time
         return false;
     }
 
@@ -1525,7 +1525,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                         }
 
                         formController.getAuditEventLogger().flush();    // Close events
-
                         animateToPreviousView();
                     }
                 } catch (JavaRosaException e) {

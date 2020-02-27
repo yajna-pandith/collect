@@ -20,6 +20,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -64,6 +65,15 @@ public class FormSaveViewModelTest {
 
         viewModel = new FormSaveViewModel(() -> CURRENT_TIME, formSaver);
         viewModel.formLoaded(formController);
+    }
+
+    @Test
+    public void saveAnswersForScreen_flushesAuditLoggerAfterSaving() throws Exception {
+        viewModel.saveAnswersForScreen(new HashMap<>());
+
+        InOrder verifier = inOrder(formController, logger);
+        verifier.verify(formController).saveAllScreenAnswers(any(), anyBoolean());
+        verifier.verify(logger).flush();
     }
 
     @Test
