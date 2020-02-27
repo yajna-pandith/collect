@@ -427,7 +427,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         });
 
         formEntryViewModel = ViewModelProviders
-                .of(this, new FormEntryViewModel.Factory(this::getFormController, analytics))
+                .of(this, new FormEntryViewModel.Factory(analytics))
                 .get(FormEntryViewModel.class);
 
         formEntryViewModel.getUpdates().observe(this, index -> {
@@ -437,7 +437,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         });
 
         formSaveViewModel = ViewModelProviders
-                .of(this, new FormSaveViewModel.Factory(this::getFormController))
+                .of(this, new FormSaveViewModel.Factory())
                 .get(FormSaveViewModel.class);
 
     }
@@ -497,7 +497,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             if (!newForm) {
                 if (getFormController() != null) {
                     FormController formController = getFormController();
-                    identityPromptViewModel.setAuditEventLogger(formController.getAuditEventLogger());
+                    formControllerAvailable(formController);
                     refreshCurrentView();
                 } else {
                     Timber.w("Reloading form and restoring state.");
@@ -2366,7 +2366,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
                 if (formController.getInstanceFile() == null) {
                     createInstanceDirectory(formController);
-                    identityPromptViewModel.setAuditEventLogger(formController.getAuditEventLogger());
+                    formControllerAvailable(formController);
 
                     identityPromptViewModel.requiresIdentityToContinue().observe(this, requiresIdentity -> {
                         if (!requiresIdentity) {
@@ -2382,7 +2382,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                         // we've just loaded a saved form, so start in the hierarchy view
                         String formMode = reqIntent.getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
                         if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
-                            identityPromptViewModel.setAuditEventLogger(formController.getAuditEventLogger());
+                            formControllerAvailable(formController);
 
                             identityPromptViewModel.requiresIdentityToContinue().observe(this, requiresIdentity -> {
                                 if (!requiresIdentity) {
@@ -2414,7 +2414,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                             finish();
                         }
                     } else {
-                        identityPromptViewModel.setAuditEventLogger(formController.getAuditEventLogger());
+                        formControllerAvailable(formController);
 
                         identityPromptViewModel.requiresIdentityToContinue().observe(this, requiresIdentity -> {
                             if (!requiresIdentity) {
@@ -2431,6 +2431,12 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             showLongToast(R.string.loading_form_failed);
             finish();
         }
+    }
+
+    private void formControllerAvailable(FormController formController) {
+        identityPromptViewModel.formLoaded(formController.getAuditEventLogger());
+        formEntryViewModel.formLoaded(formController);
+        formSaveViewModel.formLoaded(formController);
     }
 
     private void startFormEntry(FormController formController, String warningMsg) {

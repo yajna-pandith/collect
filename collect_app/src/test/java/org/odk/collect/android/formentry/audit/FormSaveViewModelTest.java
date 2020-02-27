@@ -62,7 +62,8 @@ public class FormSaveViewModelTest {
         when(formController.getAuditEventLogger()).thenReturn(logger);
         when(logger.isChangeReasonRequired()).thenReturn(false);
 
-        viewModel = new FormSaveViewModel(() -> formController, () -> CURRENT_TIME, formSaver);
+        viewModel = new FormSaveViewModel(() -> CURRENT_TIME, formSaver);
+        viewModel.formLoaded(formController);
     }
 
     @Test
