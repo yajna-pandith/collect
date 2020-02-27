@@ -354,7 +354,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         optionsMenuDelegate = new FormEntryMenuDelegate(
                 this,
                 this::getFormController,
-                () -> getCurrentViewIfODKView().getAnswers()
+                () -> getCurrentViewIfODKView().getAnswers(),
+                this::refreshCurrentView
         );
 
         nextButton = findViewById(R.id.form_forward_button);
@@ -430,16 +431,16 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 .of(this, new FormEntryViewModel.Factory(analytics))
                 .get(FormEntryViewModel.class);
 
-        formEntryViewModel.getUpdates().observe(this, index -> {
-            if (index != null) {
-                refreshCurrentView();
-            }
-        });
-
         formSaveViewModel = ViewModelProviders
                 .of(this, new FormSaveViewModel.Factory())
                 .get(FormSaveViewModel.class);
 
+    }
+
+    private void formControllerAvailable(FormController formController) {
+        identityPromptViewModel.formLoaded(formController.getAuditEventLogger());
+        formEntryViewModel.formLoaded(formController);
+        formSaveViewModel.formLoaded(formController);
     }
 
     private void setupFields(Bundle savedInstanceState) {
@@ -1690,6 +1691,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
                 try {
                     formEntryViewModel.addRepeat(true);
+                    refreshCurrentView();
                 } catch (Exception e) {
                     FormEntryActivity.this.createErrorDialog(
                             e.getMessage(), DO_NOT_EXIT);
@@ -1723,6 +1725,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                             }
 
                             formEntryViewModel.cancelRepeatPrompt();
+                            refreshCurrentView();
                         });
                     }
                 }.start();
@@ -2431,12 +2434,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             showLongToast(R.string.loading_form_failed);
             finish();
         }
-    }
-
-    private void formControllerAvailable(FormController formController) {
-        identityPromptViewModel.formLoaded(formController.getAuditEventLogger());
-        formEntryViewModel.formLoaded(formController);
-        formSaveViewModel.formLoaded(formController);
     }
 
     private void startFormEntry(FormController formController, String warningMsg) {
