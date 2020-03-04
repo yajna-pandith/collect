@@ -33,7 +33,7 @@ ODK Collect renders forms that are compliant with the [ODK XForms standard](http
 ## Release cycle
 Releases can be requested by any community member and generally happen every 2 months.
 
-Before release we perform a "code freeze" (we stop merging pull requests) and then carry out regression testing. If any problems are found, the release is blocked until we can merge fixes. Once the process is complete, [@yanokwa](https://github.com/yanokwa) pushes the releases to the Play Store. The code is "unfrozen" after a short grace period to make hot fixing easier.
+Before release, we perform a "code freeze" (we stop merging pull requests) and then carry out regression testing. If any problems are found, the release is blocked until we can merge fixes. Once the process is complete, [@yanokwa](https://github.com/yanokwa) pushes the releases to the Play Store. The code is "unfrozen" after a short grace period to make hot fixing easier.
 
 At the beginning of each release cycle, [@grzesiek2010](https://github.com/grzesiek2010) updates all dependencies that have compatible upgrades available and ensures that the build targets the latest SDK.
 
@@ -79,15 +79,15 @@ When you first run Collect, it is set to download forms from [https://opendataki
 1. Convert the XLSForm (xlsx) to XForm (xml). Use the [ODK website](http://opendatakit.org/xiframe/) or [XLSForm Offline](https://gumroad.com/l/xlsform-offline) or [pyxform](https://github.com/XLSForm/pyxform).
 
 1. Once you have the XForm, use [adb](https://developer.android.com/studio/command-line/adb.html) to push the form to your device (after [enabling USB debugging](https://www.kingoapp.com/root-tutorials/how-to-enable-usb-debugging-mode-on-android.htm)) or emulator.
-	```
-	adb push my_form.xml /sdcard/odk/forms/
-	```
+    ```
+    adb push my_form.xml /sdcard/odk/forms/
+    ```
 
 1. Launch ODK Collect and tap `Fill Blank Form`. The new form will be there.
 
 ## Using APIs for local development
 
-Certain functions in ODK Collect depend on cloud services that require API keys or authorization steps to work.  Here are the steps you need to take in order to use these functions in your development builds.
+Certain functions in ODK Collect depend on cloud services that require API keys or authorization steps to work.  Here are the steps you need to take to use these functions in your development builds.
 
 **Google Drive and Sheets APIs**: When the "Google Drive, Google Sheets" option is selected in the "Server" settings, ODK Collect uses these APIs to store submitted form data in Google Sheets and submitted media in Google Drive.  To enable these APIs:
   - Follow [these instructions to generate a signing certificate fingerprint and register the application with the Google API Console](https://developers.google.com/drive/android/auth#generate_the_signing_certificate_fingerprint_and_register_your_application).
@@ -103,7 +103,7 @@ Certain functions in ODK Collect depend on cloud services that require API keys 
     ```
 
 **Mapbox Maps SDK for Android**: When the "Mapbox SDK" option is selected in the "User interface" settings, ODK Collect uses the Mapbox SDK for displaying maps in the geospatial widgets (GeoPoint, GeoTrace, and GeoShape).  To enable this API:
-  - [Create a Mapbox account](https://www.mapbox.com/signup/).  Note that signing up with the "Pay-As-You-Go" plan does not require a credit card.  Mapbox provides free API usage up to the monthly thresholds documented at [https://www.mapbox.com/pricing](https://www.mapbox.com/pricing).  If your usage exceeds these thresholds, you will receive e-mail with instructions on how to add a credit card for payment; services will remain live until the end of the 30-day billing term, after which the account will be deactivated and will require a credit card to reactivate.
+  - [Create a Mapbox account](https://www.mapbox.com/signup/).  Note that signing up with the "Pay-As-You-Go" plan does not require a credit card.  Mapbox provides free API usage up to the monthly thresholds documented at [https://www.mapbox.com/pricing](https://www.mapbox.com/pricing).  If your usage exceeds these thresholds, you will receive an e-mail with instructions on how to add a credit card for payment; services will remain live until the end of the 30-day billing term, after which the account will be deactivated and will require a credit card to reactivate.
   - Find your access token on your [account page](https://account.mapbox.com/).
   - Edit or create `collect_app/secrets.properties` and set the `MAPBOX_ACCESS_TOKEN` property to your access token.  You should end up with a line that looks like this:
     ```
@@ -134,19 +134,19 @@ JavaRosa is the form engine that powers Collect. If you want to debug or change 
 **Jar file**
 
 1. In JavaRosa, change the version in `build.gradle` and build the jar
-	```gradle
-	jar {
-	    baseName = 'opendatakit-javarosa'
-	    version = 'x.y.z-SNAPSHOT'
-	```
+    ```gradle
+    jar {
+        baseName = 'opendatakit-javarosa'
+        version = 'x.y.z-SNAPSHOT'
+    ```
 
 1. In Collect, add the path to the jar to the dependencies in `build.gradle`
-	```gradle
-	compile files('/path/to/javarosa/build/libs/opendatakit-javarosa-x.y.z-SNAPSHOT.jar')
-	```
+    ```gradle
+    compile files('/path/to/javarosa/build/libs/opendatakit-javarosa-x.y.z-SNAPSHOT.jar')
+    ```
 
 ## Contributing code
-Any and all contributions to the project are welcome. ODK Collect is used across the world primarily by organizations with a social purpose so you can have real impact!
+Any contributions to the project are welcome. ODK Collect is used across the world primarily by organizations with a social purpose so you can have a real impact!
 
 Issues tagged as [good first issue](https://github.com/opendatakit/collect/labels/good%20first%20issue) should be a good place to start. There are also currently many issues tagged as [needs reproduction](https://github.com/opendatakit/collect/labels/needs%20reproduction) which need someone to try to reproduce them with the current version of ODK Collect and comment on the issue with their findings.
 
@@ -155,7 +155,7 @@ If you're ready to contribute code, see [the contribution guide](docs/CONTRIBUTI
 ## Contributing translations
 If you know a language other than English, consider contributing translations through [Transifex](https://www.transifex.com/opendatakit/collect/). 
 
-Translations are updated right before the first beta for a release and before the release itself. To update translations, download the zip from https://www.transifex.com/opendatakit/collect/strings/. The contents of each folder then need to be moved to the Android project folders. A quick script like [the one in this gist](https://gist.github.com/lognaturel/9974fab4e7579fac034511cd4944176b) can help. We currently copy everything from Transifex to minimize manual intervention. Sometimes translation files will only get comment changes. When new languages are updated in Transifex, they need to be added to the script above. Additionally, `ApplicationConstants.TRANSLATIONS_AVAILABLE` needs to be updated. This array provides the choices for the language preference in general settings. Ideally the list could be dynamically generated.
+Translations are updated right before the first beta for a release and before the release itself. To update translations, download the zip from https://www.transifex.com/opendatakit/collect/strings/. The contents of each folder then need to be moved to the Android project folders. A quick script like [the one in this gist](https://gist.github.com/lognaturel/9974fab4e7579fac034511cd4944176b) can help. We currently copy everything from Transifex to minimize manual intervention. Sometimes translation files will only get comment changes. When new languages are updated in Transifex, they need to be added to the script above. Additionally, `ApplicationConstants.TRANSLATIONS_AVAILABLE` needs to be updated. This array provides the choices for language preference in general settings. Ideally, the list could be dynamically generated.
 
 ## Contributing testing
 All pull requests are verified on the following devices (ordered by Android version):
@@ -174,7 +174,7 @@ Our regular code contributors use these devices (ordered by Android version):
 * [Samsung Galaxy Tab SM-T285](http://www.gsmarena.com/samsung_galaxy_tab_a_7_0_(2016)-7880.php) - Android 5.1.1
 * [Motorola G 5th Gen XT1671](https://www.gsmarena.com/motorola_moto_g5-8454.php) - Android 7.0
 
-The best way to help us test is to build from source! If you aren't a developer and want to help us test release candidates, join the [beta program](https://play.google.com/apps/testing/org.odk.collect.android)!
+The best way to help us test is to build from the source! If you aren't a developer and want to help us test release candidates, join the [beta program](https://play.google.com/apps/testing/org.odk.collect.android)!
 
 Testing checklists can be found on the [Collect testing plan](https://docs.google.com/spreadsheets/d/1ITmOW2MFs_8-VM6MTwganTRWDjpctz9CI8QKojXrnjE/edit?usp=sharing).
 
@@ -204,23 +204,23 @@ RELEASE_KEY_PASSWORD=secure-alias-password
 
 Maintainers also have a `google-services.json` file in the `collect_app/src/odkCollectRelease` folder. The contents of the file are similar to the contents of `collect_app/src/google-services.json`.
 
-To generate official signed releases, you'll need the keystore file, the keystore passwords, a configured `collect_app/secrets.properties` file, and a configured `collect_app/src/odkCollectRelease/google-services.json` file. Then run `./gradlew assembleOdkCollectRelease`. If successful, a signed release will be at `collect_app/build/outputs/apk`.
+To generate officially signed releases, you'll need the keystore file, the keystore passwords, a configured `collect_app/secrets.properties` file, and a configured `collect_app/src/odkCollectRelease/google-services.json` file. Then run `./gradlew assembleOdkCollectRelease`. If successful, a signed release will be at `collect_app/build/outputs/apk`.
 
 ## Troubleshooting
 
 #### Error when running Robolectric tests from Android Studio on macOS: `build/intermediates/bundles/debug/AndroidManifest.xml (No such file or directory)`
-> Configure the default JUnit test runner configuration in order to work around a bug where IntelliJ / Android Studio does not set the working directory to the module being tested. This can be accomplished by editing the run configurations, Defaults -> JUnit and changing the working directory value to $MODULE_DIR$.
+> Configure the default JUnit test runner configuration to work around a bug where IntelliJ / Android Studio does not set the working directory to the module being tested. This can be accomplished by editing the run configurations, Defaults -> JUnit and changing the working directory value to $MODULE_DIR$.
 
 > Source: [Robolectric Wiki](https://github.com/robolectric/robolectric/wiki/Running-tests-in-Android-Studio#notes-for-mac).
 
 #### Android Studio Error: `SDK location not found. Define location with sdk.dir in the local.properties file or with an ANDROID_HOME environment variable.`
-When cloning the project from Android Studio, click "No" when prompted to open the `build.gradle` file and then open project.
+When cloning the project from Android Studio, click "No" when prompted to open the `build.gradle` file and then open the project.
 
 #### Execution failed for task ':collect_app:transformClassesWithInstantRunForDebug'.
 
 We have seen this problem happen in both IntelliJ IDEA and Android Studio, and believe it to be due to a bug in the IDE, which we can't fix.  As a workaround, turning off [Instant Run](https://developer.android.com/studio/run/#set-up-ir) will usually avoid this problem. The problem is fixed in Android Studio 3.5 with the new [Apply Changes](https://medium.com/androiddevelopers/android-studio-project-marble-apply-changes-e3048662e8cd) feature.
 
-#### Moving to the main view if user minimizes the app
+#### Moving to the main view if the user minimizes the app
 If you build the app on your own using Android Studio `(Build -> Build APK)` and then install it (from an `.apk` file), you might notice this strange behaviour thoroughly described: [#1280](https://github.com/opendatakit/collect/issues/1280) and [#1142](https://github.com/opendatakit/collect/issues/1142).
 
 This problem occurs building other apps as well.
